@@ -83,7 +83,27 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
+// Health check endpoint for UptimeRobot monitoring
+app.get('/api/health', (_req, res) => {
+  const uptime = process.uptime();
+  const healthCheck = {
+    ok: true,
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: `${Math.floor(uptime / 60)}m ${Math.floor(uptime % 60)}s`,
+    service: 'PARA API'
+  };
+  res.status(200).json(healthCheck);
+});
+
+// Alternative root health check (in case UptimeRobot pings root)
+app.get('/', (_req, res) => {
+  res.status(200).json({ 
+    ok: true, 
+    message: 'PARA API is running',
+    timestamp: new Date().toISOString() 
+  });
+});
 
 app.listen(port, () => {
   console.log(`[chat-server] listening on http://localhost:${port}`);
