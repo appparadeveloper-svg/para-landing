@@ -83,8 +83,8 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Health check endpoint for UptimeRobot monitoring
-app.get('/api/health', (_req, res) => {
+// Health check endpoint for UptimeRobot monitoring (supports GET and HEAD)
+app.all('/api/health', (_req, res) => {
   const uptime = process.uptime();
   const healthCheck = {
     ok: true,
@@ -96,8 +96,8 @@ app.get('/api/health', (_req, res) => {
   res.status(200).json(healthCheck);
 });
 
-// Alternative root health check (in case UptimeRobot pings root)
-app.get('/', (_req, res) => {
+// Alternative root health check (supports GET and HEAD for UptimeRobot)
+app.all('/', (_req, res) => {
   res.status(200).json({ 
     ok: true, 
     message: 'PARA API is running',
